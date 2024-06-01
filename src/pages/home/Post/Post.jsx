@@ -1,56 +1,53 @@
-import React from 'react';
 import { FaRegComments } from "react-icons/fa";
 import { MdOutlineThumbsUpDown } from "react-icons/md";
 import { IoMdTime } from "react-icons/io";
+import { FaUser } from "react-icons/fa6";
+import PropTypes from 'prop-types'
 
 
 
-const Post = () => {
-  const post = {
-    author_image: 'https://i.postimg.cc/kXW3jLCc/client-3.png',
-    author_email: 'sadiqur05@gmail.com',
-    author_name: 'Sadiqur Rahman',
-    post_title: "Will be added soon",
-    description: 'sdlfks sdlfjs sdlfjsd sldfjsldf lsdfjkslf',
-    tag: 'comedy',
-    up_vote_count: 10,
-    down_vote_count: 10,
-    posted_time: '12/12/12'
+const Post = ({post}) => {
 
-  }
+  const {author_image, author_name, post_title, description, tag, up_vote_count,down_vote_count,comment_count,posted_time} = post || {}
+  const total_votes = up_vote_count-down_vote_count;
 
   return (
-    <div class="bg-[#f3f3f5] dark:bg-gray-800 p-4 md:p-6 lg:p-10 rounded-3xl mb-4 md:mb-6 flex gap-3 lg:gap-6 mt-10 col-span-8">
-      <div class=" w-10 md:w-[72px] h-10 md:h-[72px] relative rounded-md ">
-        <img class="w-full rounded-3xl" src={post.author_image} />
+    <div className="bg-[#f3f3f5] dark:bg-gray-800 p-4 md:p-6 lg:p-10 rounded-xl mb-4 md:mb-4 flex flex-col md:flex-row gap-3 lg:gap-6 h-fit">
+      <div className="flex gap-4">
+        <img className="w-10 h-10 md:w-[72px] md:h-[72px] rounded-3xl" src={author_image} />
+        <h4 className='flex md:hidden items-center text-c-text gap-2'><FaUser className='text-xs'></FaUser> <span>{author_name || "unknown"}</span></h4>
       </div>
-      <div class="flex-1">
-        <div class="flex flex-col md:flex-row md:gap-4 lg:gap-6 font-inter font-medium text-[#12132dcc] dark:text-white">
-          <h4># <span>{post?.tag || "unknown"}</span></h4>
-          <h4>Author : <span>{post?.author_name || "unknown"}</span></h4>
-        </div>
-        <div class="border-b-[1px] lg:border-b-[2px] border-dashed border-[#12132d28]">
-          <h1 class="pt-3 font-bold text-lg md:text-xl text-neutral-800 dark:text-white">{
-            post?.post_title || "Not Specified"
+      <div className="flex-1">
+        <div className="flex flex-col md:flex-row justify-between md:gap-4 lg:gap-6 font-inter font-medium text-[#12132dcc] dark:text-white">
+          <h1 className="font-bold text-lg md:text-xl text-neutral-800 dark:text-white">{
+            post_title || "Not Specified"
           }</h1>
-          <p class="py-3 md:py-4 text-c-text dark:text-gray-400">{
-            post?.description || "Not Specified"
+          <h4># <span>{tag || "unknown"}</span></h4>
+        </div>
+        <div className="border-b-[1px] lg:border-b-[2px] border-dashed border-[#12132d28]">
+          <h4 className=' items-center text-c-text dark:text-gray-400 gap-2 hidden md:flex'><FaUser className='text-xs'></FaUser> <span>{author_name || "unknown"}</span></h4>
+          <p className="py-3 md:py-4 text-c-text dark:text-gray-300">{
+            description || "Not Specified"
           }</p>
         </div>
-        <div class="flex justify-between mt-3 md:mt-5 items-end text-gray-800">
+        <div className="flex justify-between mt-3 md:mt-5 items-end text-gray-800 dark:text-gray-400 gap-2 md:gap-6">
 
-          <div className='flex gap-10'>
-            <p class='flex gap-2 items-center'><FaRegComments className='text-lg'></FaRegComments><span>{post?.comment_count || 0}</span></p>
+          <div className='flex gap-4 md:gap-10'>
+            <p className='flex gap-2 items-center'><FaRegComments className='text-lg'></FaRegComments><span>{comment_count || 0}</span></p>
 
-            <p class='flex gap-2 items-center'><MdOutlineThumbsUpDown className='text-lg'></MdOutlineThumbsUpDown><span>{post?.up_vote_count || 0}</span></p>
+            <p className='flex gap-2 items-center'><MdOutlineThumbsUpDown className='text-lg'></MdOutlineThumbsUpDown><span>{total_votes || 0}</span></p>
           </div>
 
-          <p class='flex gap-2 items-center'><IoMdTime className='text-lg'></IoMdTime><span>{post?.posted_time || 0}</span></p>
+          <p className='flex gap-2 items-center'><IoMdTime className='text-lg'></IoMdTime><span>{posted_time || 0}</span></p>
 
         </div>
       </div>
     </div>
   );
 };
+
+Post.propTypes ={
+  post: PropTypes.object
+}
 
 export default Post;
