@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from './Banner.module.css'
 import { LuSettings2 } from "react-icons/lu";
 import { FaLaptopCode } from 'react-icons/fa6';
@@ -8,7 +7,7 @@ import TagBox from './TagBox';
 
 const Banner = () => {
   return (
-    <div className={`${styles.bannerImg} rounded-lg md:rounded-xl py-10 md:py-20 xl:py-32 md:px-10 lg:px-16 text-white  lg:grid grid-cols-12 gap-6 md:gap-10 items-center px-5`}>
+    <div className={`${styles.bannerImg} rounded-lg md:rounded-xl py-10 md:py-20 xl:py-36 md:px-10 lg:px-16 text-white  lg:grid grid-cols-12 gap-6 md:gap-10 items-center px-5`}>
       <div className="flex flex-col mx-auto justify-center w-full rounded-3xl space-y-5 col-span-5 mb-6 lg:mb-0 text-center lg:text-left">
         <h2 className='text-4xl font-extrabold leading-snug'>Welcome to the <span className='text-c-primary'>Craze</span><span className='text-c-secondary'>Forum</span></h2>
         <p>This is the place to talk about anything and everything. Start new topics, share your ideas, and chat with others.</p>
