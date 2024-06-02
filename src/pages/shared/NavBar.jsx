@@ -24,23 +24,21 @@ import {
   IconButton,
   Spinner,
 } from "@material-tailwind/react";
+import { AuthContext } from '@/proviers/AuthProvider';
 
 
 
 const NavBar = () => {
 
   const [openNav, setOpenNav] = React.useState(false);
+  const {user,loading, logOut} = useContext(AuthContext)
 
   const prevTheme = localStorage.getItem("theme") || "light";
-  const [theme, setTheme] = useState('light')
-  const user = true;
-  const loading = false;
+  const [theme, setTheme] = useState(prevTheme)
+
 
   useEffect(() => {
-
     localStorage.setItem("theme", theme);
-
-
     if (theme === 'dark') {
       document.documentElement.classList.add('dark')
     } else {
@@ -48,14 +46,16 @@ const NavBar = () => {
     }
   }, [theme])
 
-  const handleToggle = (e) => {
+  const handleToggle = () => {
     console.log('clicked')
     console.log(theme)
     setTheme(theme === "dark" ? 'light' : 'dark')
   };
 
   const handleLogout = () => {
-    console.log('logout')
+    logOut()
+    .then()
+    .catch(error=>console.log(error))
   }
 
   const activeStyles =
@@ -116,14 +116,14 @@ const NavBar = () => {
   }, []);
 
   const navList = (
-    <ul className="mt-2 mb-4 flex flex-col lg:gap-4 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center">
+    <ul className="mt-2 mb-4 flex flex-col lg:gap-4 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center ">
       {links}
     </ul>
   );
 
   return (
     <div className="max-h-[768px] w-full overflow-hidden border-0 outline-none py-0">
-      <Navbar className='sticky top-0 z-10 h-max max-w-full rounded-none dark:bg-neutral-800  text-c-black'>
+      <Navbar className='sticky top-0 z-10 h-max max-w-full rounded-none dark:bg-gray-900  text-c-black'>
         <div className="flex justify-between h-[40px] md:h-[50px] max-w-screen-xl w-[90%] md:w-5/6 mx-auto">
           <Typography className="mr-4 cursor-pointer font-bold text-2xl md:text-3xl flex items-center gap-2">
             <img className="w-6 h-6" src="/logo.png" alt="" />
@@ -138,7 +138,7 @@ const NavBar = () => {
 
             </div>
             <div className="flex items-center gap-x-1">
-              {true && (
+              {user && (
                 <>
                   <DropdownMenu>
                     <DropdownMenuTrigger className='rounded-full'>
@@ -146,7 +146,7 @@ const NavBar = () => {
                         <img
                           className="w-full h-full rounded-full"
                           alt="Profile Picture"
-                          src='https://i.postimg.cc/kXW3jLCc/client-3.png'
+                          src={user?.photoURL}
                         />
                       </div>
 
