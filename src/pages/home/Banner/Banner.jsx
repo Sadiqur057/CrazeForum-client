@@ -11,8 +11,8 @@ const Banner = () => {
       <div className="flex flex-col mx-auto justify-center w-full rounded-3xl space-y-5 col-span-5 mb-6 lg:mb-0 text-center lg:text-left">
         <h2 className='text-4xl font-extrabold leading-snug'>Welcome to the <span className='text-c-primary'>Craze</span><span className='text-c-secondary'>Forum</span></h2>
         <p>This is the place to talk about anything and everything. Start new topics, share your ideas, and chat with others.</p>
-        <form className='flex mx-auto lg:m-0 justify-center lg:justify-start bg-white dark:bg-neutral-800 w-full rounded-3xl p-[3px] max-w-sm'>
-          <input type="text" placeholder="Search by Tags" className='rounded-l-3xl w-full pl-4 py-2 dark:bg-neutral-800 outline-none text-neutral-800 dark:text-white' />
+        <form className='flex mx-auto lg:m-0 justify-center lg:justify-start bg-white dark:bg-gray-900 w-full rounded-3xl p-[3px] max-w-sm'>
+          <input type="text" placeholder="Search by Tags" className='rounded-l-3xl w-full pl-4 py-2 dark:bg-gray-900 outline-none text-neutral-800 dark:text-white' />
           <input type="submit" className='px-4 font-medium bg-c-primary rounded-3xl py-2' />
         </form>
       </div>
