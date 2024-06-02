@@ -1,6 +1,6 @@
-import Banner from "./Banner/Banner";
-import Container from "../../components/container/Container"
-import PostContainer from "./Post/PostContainer";
+import Banner from "../Banner/Banner";
+import Container from "../../../components/container/Container"
+import PostContainer from "../Post/PostContainer";
 
 const Home = () => {
 
@@ -8,7 +8,6 @@ const Home = () => {
     <Container>
       <Banner></Banner>
       <PostContainer></PostContainer>
-      
     </Container>
   );
 };
