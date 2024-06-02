@@ -16,14 +16,17 @@ const PostContainer = () => {
 
   const axiosCommon = useAxiosCommon()
 
-  const {data: posts} = useQuery({
+  const {data: posts=[], isLoading} = useQuery({
     queryKey:['post'],
     queryFn: async()=>{
       const res = await axiosCommon.get('/posts')
       return res.data
-
     }
   })
+
+  if(isLoading){
+    return <p>Loading</p>
+  }
 
   const tags = ['comedy', 'coding', 'technologies', 'programming', 'music', 'arts']
   const announcements = ['Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eum, porro neque. Repellat debitis nam reprehenderit qui quisquam ab officia commodi .', 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eum, porro neque. Repellat debitis nam reprehenderit qui quisquam ab officia commodi .'] 
