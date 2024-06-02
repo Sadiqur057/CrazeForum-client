@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Helmet } from "react-helmet-async";
 import { VscEye, VscEyeClosed } from "react-icons/vsc";
-import { FaGithub, FaGoogle } from "react-icons/fa6";
+import { FaGithub } from "react-icons/fa6";
 import { Input } from "@material-tailwind/react";
 import GoogleLogin from "@/components/socialLogin/GoogleLogin";
 // import authImg from "../../assets/images/auth.png"
@@ -36,7 +36,7 @@ const Login = () => {
     const email = data.email;
     const password = data.password;
     signIn(email, password)
-      .then((user) => {
+      .then(() => {
         setReload(true)
         
         toast.success("Login Success");
@@ -57,11 +57,9 @@ const Login = () => {
 
   const handleGithubLogin = () => {
     githubLogin()
-      .then((user) => {
+      .then(() => {
         toast.success("Login Success");
-        setUser(user)
         setReload(true)
-
         toast.success("Login Success");
         navigate(location?.state ? location.state : "/");
       })
