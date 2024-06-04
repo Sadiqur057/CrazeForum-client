@@ -31,7 +31,7 @@ import { AuthContext } from '@/proviers/AuthProvider';
 const NavBar = () => {
 
   const [openNav, setOpenNav] = React.useState(false);
-  const {user,loading, logOut} = useContext(AuthContext)
+  const { user, loading, logOut } = useContext(AuthContext)
 
   const prevTheme = localStorage.getItem("theme") || "light";
   const [theme, setTheme] = useState(prevTheme)
@@ -54,8 +54,8 @@ const NavBar = () => {
 
   const handleLogout = () => {
     logOut()
-    .then()
-    .catch(error=>console.log(error))
+      .then()
+      .catch(error => console.log(error))
   }
 
   const activeStyles =
@@ -156,9 +156,12 @@ const NavBar = () => {
                         Sadiqur Rahman
                       </DropdownMenuLabel>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem>
-                        <MdOutlineDashboard>
-                        </MdOutlineDashboard> &nbsp; Dashboard</DropdownMenuItem>
+                      <Link to='/dashboard'>
+                        <DropdownMenuItem>
+                          <MdOutlineDashboard>
+                          </MdOutlineDashboard> &nbsp; Dashboard
+                        </DropdownMenuItem>
+                      </Link>
                       <DropdownMenuItem>
                         <MdLogout></MdLogout> &nbsp; Logout
                       </DropdownMenuItem>
