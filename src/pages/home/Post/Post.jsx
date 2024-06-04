@@ -1,7 +1,6 @@
 import { FaRegComments } from "react-icons/fa";
 import { MdOutlineThumbsUpDown } from "react-icons/md";
 import { IoMdTime } from "react-icons/io";
-import { FaUser } from "react-icons/fa6";
 import PropTypes from 'prop-types'
 import { Link } from "react-router-dom";
 
@@ -17,7 +16,7 @@ const Post = ({ post }) => {
       <div className="bg-[#f3f3f5] dark:bg-gray-800 p-4 md:p-6 lg:p-10 rounded-xl mb-4 md:mb-4 flex flex-col md:flex-row gap-3 lg:gap-6 h-fit">
         <div className="flex gap-4">
           <img className="w-10 h-10 md:w-[72px] md:h-[72px] rounded-3xl" src={author_image} />
-          <h4 className='flex md:hidden items-center text-c-text gap-2'><FaUser className='text-xs'></FaUser> <span>{author_name || "unknown"}</span></h4>
+          <h4 className='flex font-medium flex-col md:hidden text-gray-800 dark:text-gray-300'> <span>{author_name || "unknown"}</span> <span className="text-sm text-gray-600 dark:text-gray-500">Author</span></h4>
         </div>
         <div className="flex-1">
           <div className="flex flex-col md:flex-row justify-between md:gap-4 lg:gap-6 font-inter font-medium text-[#12132dcc] dark:text-white">
@@ -27,7 +26,7 @@ const Post = ({ post }) => {
             <h4># <span>{tag || "unknown"}</span></h4>
           </div>
           <div className="border-b-[1px] lg:border-b-[2px] border-dashed border-[#12132d28]">
-            <h4 className=' items-center text-c-text dark:text-gray-400 gap-2 hidden md:flex'><FaUser className='text-xs'></FaUser> <span>{author_name || "unknown"}</span></h4>
+            <h4 className=' items-center text-c-text dark:text-gray-400 gap-2 hidden md:flex'> <span>{author_name || "unknown"}</span></h4>
             <p className="py-3 md:py-4 text-c-text dark:text-gray-300">{
               description || "Not Specified"
             }</p>
