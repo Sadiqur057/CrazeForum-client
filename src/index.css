@@ -10,6 +10,9 @@ p, .font-inter{
 h1,h2,h3,h4,h5, .font-mulish{
   font-family: "Mulish", sans-serif;
 }
+.shadow-custom {
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
 
   @layer base {
     :root {
