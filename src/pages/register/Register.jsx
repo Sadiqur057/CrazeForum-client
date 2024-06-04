@@ -39,7 +39,8 @@ const Register = () => {
               photo: data.photo,
               badge: 'bronze',
               reportCount: 0,
-              isAdmin: false
+              isAdmin: false,
+              postCount: 0
             }
             axiosCommon.post('/users', userInfo)
               .then(res => {
