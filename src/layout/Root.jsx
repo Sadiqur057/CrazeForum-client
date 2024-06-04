@@ -5,7 +5,7 @@ const Root = () => {
   return (
     <>
       <NavBar></NavBar>
-      <main className="dark:bg-neutral-800 min-h-[calc(100vh-82px)]">
+      <main className="dark:bg-gray-900 min-h-[calc(100vh-82px)]">
           <Outlet></Outlet>
       </main>
     </>
