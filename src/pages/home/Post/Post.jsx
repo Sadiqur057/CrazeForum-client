@@ -6,10 +6,14 @@ import { Link } from "react-router-dom";
 
 
 
-const Post = ({ post }) => {
+const Post = ({ post, postsByTagLoading }) => {
 
   const { _id, author_image, author_name, post_title, description, tag, up_vote_count, down_vote_count, comment_count, posted_time } = post || {}
   const total_votes = up_vote_count - down_vote_count;
+
+  if(postsByTagLoading){
+    return 'Loading'
+  }
 
   return (
     <Link to={`/post/${_id}`}>
@@ -49,7 +53,8 @@ const Post = ({ post }) => {
 };
 
 Post.propTypes = {
-  post: PropTypes.object
+  post: PropTypes.object,
+  postsByTagLoading: PropTypes.bool
 }
 
 export default Post;
