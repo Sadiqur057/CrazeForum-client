@@ -8,14 +8,85 @@ import { MdOutlineEmail } from "react-icons/md";
 import useLoadUserPost from "@/hooks/useLoadUserPost";
 import { FaComments } from "react-icons/fa";
 import { LiaCommentSolid } from "react-icons/lia";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import useAxiosCommon from "@/hooks/useAxiosCommon";
+import { toast } from "react-toastify";
+import React, { PureComponent } from 'react';
+import { PieChart, Pie, Sector, Cell, ResponsiveContainer, Legend } from 'recharts';
+import useLoadTags from "@/hooks/useLoadTags";
+
 
 
 const AdminProfile = () => {
   const { user } = useContext(AuthContext)
-  const [posts,isLoading] = useLoadUserPost()
+  const [posts, isLoading] = useLoadUserPost()
+  const axiosCommon = useAxiosCommon()
+
+  const { data: stats = {}, isLoading: isStatsLoading } = useQuery({
+    queryKey: ['stats'],
+    queryFn: async () => {
+      const res = await axiosCommon.get('/stats')
+      console.log(res.data)
+      return res.data;
+    }
+  })
+
+
+  const [tags,refetchTags] = useLoadTags()
+
+  const { mutate } = useMutation({
+    mutationFn: async (data) => {
+      const res = await axiosCommon.post('/tags', data)
+      if (res.data.insertedId) {
+        toast.success("This tag has been added")
+        refetchTags()
+      }
+    }
+  })
+
+  const handleAddTag = (e) => {
+    e.preventDefault();
+    const tagName = e.target.tag.value
+    const info = { tagName }
+    mutate(info)
+  }
+
+  // chart config
+
+
+  const piChartData = [
+    {
+      name: "Total Comments", value: stats?.commentCounts
+    },
+    {
+      name: "Total Posts", value: stats?.postCounts
+    },
+    {
+      name: "Total Users", value: stats?.userCounts
+    },
+  ]
+
+
+  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+
+  const RADIAN = Math.PI / 180;
+  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+    return (
+      <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+        {`${(percent * 100).toFixed(0)}%`}
+      </text>
+    );
+  };
+
+
+  console.log(piChartData)
 
   console.log(posts)
-  if (isLoading) {
+  if (isLoading || isStatsLoading) {
     return <p>Loading</p>
   }
   return (
@@ -34,7 +105,7 @@ const AdminProfile = () => {
         </div>
         <div className="w-full flex flex-col items-center lg:items-start">
           <p>Total Users</p>
-          <h2 className="text-2xl font-bold">340</h2>
+          <h2 className="text-2xl font-bold">{stats?.userCounts}</h2>
         </div>
 
       </div>
@@ -44,7 +115,7 @@ const AdminProfile = () => {
         </div>
         <div className="w-full flex flex-col items-center lg:items-start">
           <p>Total Posts</p>
-          <h2 className="text-2xl font-bold">123</h2>
+          <h2 className="text-2xl font-bold">{stats?.postCounts}</h2>
         </div>
 
       </div>
@@ -54,46 +125,43 @@ const AdminProfile = () => {
         </div>
         <div className="w-full flex flex-col items-center lg:items-start">
           <p>Total Comments</p>
-          <h2 className="text-2xl font-bold">340</h2>
+          <h2 className="text-2xl font-bold">{stats?.commentCounts}</h2>
         </div>
 
       </div>
 
-
-      <div className="col-span-12">
-        <h2 className="text-3xl font-bold mb-4 mt-8">Recent Posts</h2>
-        {
-          posts.map(post => <div key={post._id} className='bg-[#f3f3f5] dark:bg-gray-800 p-5 rounded-xl mb-4'>
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-light text-gray-600 dark:text-gray-400 flex gap-2 items-center"><IoMdTime className='text-base mt-[1px]'></IoMdTime> {post?.posted_time}</span>
-              <p>#{post?.tag}</p>
-            </div>
-
-            <div className="mt-2">
-              <a href="#" className="text-xl font-bold text-gray-700 dark:text-gray-100" tabIndex="0" role="link">{post?.post_title}</a>
-              <p className="mt-2 text-gray-600 dark:text-gray-300">{post?.description} Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deleniti enim accusamus facilis commodi sed id architecto odit aliquam. Ab, recusandae. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deleniti enim accusamus facilis commodi sed id architecto odit aliquam. Ab, recusandae.</p>
-            </div>
-            <div className='mt-5 items-center'>
-              <div className='flex text-gray-800 dark:text-gray-400 gap-5 md:gap-10'>
-                <p className='flex gap-2 items-center'><FaRegComments className='text-lg'></FaRegComments><span>{post?.comment_count || 0}</span></p>
-                <p className='flex gap-2 items-center'>
-                  <button disabled>
-                    <BiUpvote
-                      className='text-lg'>
-                    </BiUpvote>
-                  </button>
-                  <span>{post?.up_vote_count || 0}</span></p>
-                <p className='flex gap-2 items-center'>
-                  <button disabled>
-                    <BiDownvote
-                      className='text-lg'></BiDownvote>
-                  </button>
-                  <span>{post?.down_vote_count || 0}</span></p>
-              </div>
-            </div>
-          </div>)
-        }
+      <div className="col-span-5 shadow-custom w-full p-6 bg-white rounded-lg dark:bg-gray-800 flex gap-5 flex-col h-fit">
+        <h2 className="font-bold text-lg">Add New Tags</h2>
+        <form onSubmit={handleAddTag} className="flex flex-col gap-2">
+          <input type="text" className="w-full py-2 px-3 rounded-md dark:bg-gray-700" name="tag" placeholder="Add New Tags" />
+          <input type="submit" className="py-2 px-6 rounded-md bg-c-primary" value="Add" />
+        </form>
+        <h4 className="mt-2 font-semibold text-lg leading-3">Added tags: </h4>
+        <div className="flex flex-wrap gap-x-3">{tags.map(tag => <p key={tag?._id}>#{tag?.tagName}</p>)}  </div>
       </div>
+      <div className="col-span-7 shadow-custom w-full p-6 bg-white rounded-lg dark:bg-gray-800 flex gap-5 items-center justify-center h-fit">
+        <div className="overflow-auto">
+          <PieChart width={400} height={400}>
+            <Pie
+              data={piChartData}
+              cx="50%"
+              cy="50%"
+              labelLine={false}
+              label={renderCustomizedLabel}
+              outerRadius={80}
+              fill="#8884d8"
+              dataKey="value"
+            >
+              {piChartData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+              ))}
+            </Pie>
+            <Legend></Legend>
+          </PieChart>
+
+        </div>
+      </div>
+
     </div>
   );
 };
