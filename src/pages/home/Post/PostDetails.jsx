@@ -65,17 +65,17 @@ const PostDetails = () => {
     updateDownVote({ update: 1 })
   }
 
-  const {mutate} = useMutation({
-    mutationFn: async(commentsDetails)=>{
-      const res = await axiosCommon.post('/comment',commentsDetails)
-      if(res.data.insertedId){
+  const { mutate } = useMutation({
+    mutationFn: async (commentsDetails) => {
+      const res = await axiosCommon.post('/comment', commentsDetails)
+      if (res.data.insertedId) {
         console.log("success")
         refetchComments()
       }
     }
   })
 
-  const handleComments = (e)=>{
+  const handleComments = (e) => {
     e.preventDefault()
     const comment = e.target.comment.value;
     const post_id = postId
@@ -88,7 +88,7 @@ const PostDetails = () => {
     }
     mutate(commentsDetails)
     e.target.comment.value = ''
-    
+
 
   }
 
@@ -110,7 +110,7 @@ const PostDetails = () => {
 
           <div className="mt-2">
             <a href="#" className="text-xl font-bold text-gray-700 dark:text-gray-100" tabIndex="0" role="link">{post_title}</a>
-            <p className="mt-2 text-gray-600 dark:text-gray-300">{description} Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deleniti enim accusamus facilis commodi sed id architecto odit aliquam. Ab, recusandae. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deleniti enim accusamus facilis commodi sed id architecto odit aliquam. Ab, recusandae.</p>
+            <p className="mt-2 text-gray-600 dark:text-gray-300">{description}</p>
           </div>
           <div className='mt-5 grid grid-cols-12 items-center'>
             <div className='col-span-6'>
@@ -145,20 +145,20 @@ const PostDetails = () => {
 
         <div className='md:grid grid-cols-12 gap-4 mt-6 flex'>
 
-          <div className='col-span-6 order-2 mb-5 lg:mb-0 flex gap-3'>
-          <div className='w-10 h-10'>
-            <img className='w-full rounded-full' src={user?.photoURL} alt="" />
-          </div>
-            <form onSubmit={handleComments}>
+          <div className='col-span-5 order-2 mb-5 lg:mb-0 flex gap-3'>
+            <div className='w-12 h-12'>
+              <img className='w-full rounded-full' src={user?.photoURL} alt="" />
+            </div>
+            <form onSubmit={handleComments} className='w-full'>
               <textarea className='border  rounded-md border-c-secondary w-full outline-none p-2 bg:white dark:bg-gray-800' name="comment" placeholder='write a comment'></textarea>
               <input type="submit" className='bg-c-secondary w-full py-2 rounded-md text-white font-semibold' value="Comment" />
             </form>
           </div>
-          <div className='col-span-6 order-1 space-y-4'>
+          <div className='col-span-7 order-1 space-y-4'>
             <div className="bg-[#f3f3f5] dark:bg-gray-800 p-5 rounded-xl">
               <h2 className='text-2xl font-bold'>Comments ({comments.length})</h2>
               {
-                comments.map(comment=><div key={comment._id}>
+                comments.map(comment => <div key={comment._id}>
                   <hr className='my-4 bg-[#eeeeee]' />
                   <p className="font-semibold text-gray-600 cursor-pointer dark:text-gray-200 mb-1" >{comment.commenter_name}</p>
                   <p className="text-gray-600 cursor-pointer dark:text-gray-200 leading-[22px]" >{comment.comment} </p>
