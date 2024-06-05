@@ -1,13 +1,34 @@
 
+import useAxiosCommon from "@/hooks/useAxiosCommon";
 import useLoadUserPost from "@/hooks/useLoadUserPost";
 import { Button } from "@material-tailwind/react";
+import { useMutation } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const UserPost = () => {
 
 
-  const [posts,isLoading] = useLoadUserPost()
+  const [posts, isLoading, refetchPosts] = useLoadUserPost()
+  const axiosCommon = useAxiosCommon()
 
-  if(isLoading){
+  const { mutate } = useMutation({
+    mutationFn: async (id) => {
+      const res = await axiosCommon.delete(`/post/${id}`)
+      console.log(res.data)
+      if (res.data.deletedCount > 0) {
+        toast.success('This post has been deleted')
+        refetchPosts()
+      }
+    }
+  })
+
+  const handleDeletePost = (id) => {
+    console.log('delete', id)
+    mutate(id)
+  }
+
+  if (isLoading) {
     return "loading"
   }
   return (
@@ -34,16 +55,18 @@ const UserPost = () => {
         <tbody className="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
           {
             posts.map((post, idx) => <tr key={post._id}>
-              <td className="px-4 py-4 text-sm font-medium whitespace-nowrap">{idx+1}</td>
+              <td className="px-4 py-4 text-sm font-medium whitespace-nowrap">{idx + 1}</td>
               <td className="px-4 py-4 text-sm font-medium whitespace-nowrap">
                 <h2 className="font-medium text-gray-800 dark:text-white ">{post?.post_title}</h2>
               </td>
               <td className="px-12 py-4 text-sm font-medium whitespace-nowrap">
-                {post?.up_vote_count-post?.down_vote_count}
+                {post?.up_vote_count - post?.down_vote_count}
               </td>
               <td className="px-4 py-4 text-sm whitespace-nowrap space-x-2">
-                <Button className="rounded-xl bg-c-primary"> Comments</Button>
-                <Button className="rounded-xl bg-red-500">Delete</Button>
+                <Link to={`/dashboard/comments/${post?._id}`}>
+                  <Button className="rounded-xl bg-c-primary"> Comments</Button>
+                </Link>
+                <Button onClick={() => handleDeletePost(post?._id)} className="rounded-xl bg-red-500">Delete</Button>
               </td>
 
 
