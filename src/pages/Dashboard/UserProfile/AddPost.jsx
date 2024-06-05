@@ -1,4 +1,3 @@
-import { Select, Option, Input, Textarea } from "@material-tailwind/react";
 import Swal from "sweetalert2";
 import { Helmet } from "react-helmet-async";
 import { useState } from "react";
@@ -7,30 +6,21 @@ import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import useAxiosCommon from "@/hooks/useAxiosCommon";
 import useLoadUserPost from "@/hooks/useLoadUserPost";
+import useLoadTags from "@/hooks/useLoadTags";
 
 const AddPost = () => {
   const { user } = useAuth();
   const axiosCommon = useAxiosCommon()
   const navigate = useNavigate();
-  const [categoryValue, setCategoryValue] = useState("");
+  const [categoryValue, setCategoryValue] = useState("coding");
   const [posts, isLoading] = useLoadUserPost()
 
+  const [tags] = useLoadTags()
 
 
-
-  const categoryOptions = [
-    { label: "Comedy", value: "comedy" },
-    { label: "Technology", value: "technology" },
-    { label: "Coding", value: "coding" },
-    { label: "Social", value: "Social" },
-    { label: "Music", value: "Musics" },
-    { label: "Arts", value: "arts" },
-  ];
-
-
-
-  const handleCategoryOptions = (value) => {
-    setCategoryValue(value);
+  const handleCategoryOptions = (e) => {
+    console.log(e.target.value)
+    setCategoryValue(e.target.value);
   };
 
 
@@ -78,8 +68,9 @@ const AddPost = () => {
       down_vote_count,
       posted_time
     };
+    console.log(postDetails)
 
-    if (posts.length < 3) {
+    if (posts.length < 5) {
       mutate(postDetails);
     } else {
       Swal.fire({
@@ -108,10 +99,10 @@ const AddPost = () => {
       <Helmet>
         <title>CF | Add Post</title>
       </Helmet>
-      <section className="py-5 bg-gray-900 w-[90%] max-w-4xl  rounded-md bg-cool">
+      <section className="py-5 dark:bg-gray-900   rounded-md">
         <form
           onSubmit={handleAddPost}
-          className="container flex flex-col mx-auto space-y-12 bg-base-100 rounded-xl px-4ee md:px-10 pb-5"
+          className="container flex flex-col mx-auto space-y-12 bg-base-100 rounded-xl px-4 md:px-10 pb-5"
         >
           <fieldset className=" gap-6 rounded-md p-2 md:p-6 lg:p-10">
             <div className="space-y-2 col-span-full lg:col-span-1">
@@ -119,45 +110,43 @@ const AddPost = () => {
                 Add Post
               </p>
             </div>
-            <div className="grid grid-cols-6 gap-4 col-span-full ">
+            <div className="grid grid-cols-6 gap-4 col-span-full">
               <div className="col-span-full sm:col-span-3">
-                <Input
-                  label="Post Title"
-                  color="teal"
-                  name="postTitle"
-                  required
-                />
+                <label htmlFor="postTitle">Post Title</label>
+                <input type="text" name="postTitle" id="postTitle"
+                  required className="w-full p-[7px] rounded-md bg-gray-100 dark:bg-gray-800 mt-1 outline-none" placeholder="Post Title" />
               </div>
               <div className="col-span-full sm:col-span-3">
                 <div>
-                  <Select
-                    label="Select Post Category"
-                    color="teal"
+                  <label htmlFor="category">Tag</label>
+                  <select
                     required
+                    id="category"
                     onChange={handleCategoryOptions}
+                    className="w-full mt-1 p-[10px] rounded-md dark:bg-gray-800 bg-gray-100 outline-none"
                   >
-                    {categoryOptions.map((categoryOption) => (
-                      <Option
-                        key={categoryOption.value}
-                        value={categoryOption.value}
+                    {tags.map((tag) => (
+                      <option className="py-2"
+                        key={tag.tagName}
+                        value={tag.tagName}
                       >
-                        {categoryOption.label}
-                      </Option>
+                        {tag.tagName}
+                      </option>
                     ))}
-                  </Select>
+                  </select>
                 </div>
               </div>
 
 
               <div className="col-span-full">
-                <div className="relative w-full min-w-[200px]">
-                  <Textarea
-                    required
+                <div className=" w-full">
+                  <label htmlFor="desc">Description</label>
+                  <textarea
+                    id="desc"
                     name="description"
-                    color="teal"
-                    label="Write your queries/contents here"
-                    className="h-[200px]"
-                  ></Textarea>
+                    placeholder="Write description"
+                    className="bg-gray-100 h-[200px] w-full p-2 rounded-md dark:bg-gray-800 mt-1 outline-none"
+                  ></textarea>
                 </div>
               </div>
               <div className="col-span-full">
