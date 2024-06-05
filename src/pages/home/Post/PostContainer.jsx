@@ -1,56 +1,40 @@
 import Post from "./Post";
 import { IoMdSearch } from "react-icons/io";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { useQuery } from "@tanstack/react-query";
-import useAxiosCommon from "@/hooks/useAxiosCommon";
+import useLoadAnnouncements from "@/hooks/useLoadAnnouncements";
+import PropTypes from 'prop-types'
+import { Button } from "@material-tailwind/react";
+import useLoadTags from "@/hooks/useLoadTags";
 
-const PostContainer = () => {
+const PostContainer = ({ postsByTagLoading, displayPosts, setDisplayPosts,refetchPostsByTag, setKeyword }) => {
 
-  const axiosCommon = useAxiosCommon()
+  const [announcements] = useLoadAnnouncements()
 
-  const {data: posts=[], isLoading} = useQuery({
-    queryKey:['post'],
-    queryFn: async()=>{
-      const res = await axiosCommon.get('/posts')
-      return res.data
-    }
-  })
+  const [tags ] = useLoadTags()
 
-  if(isLoading){
-    return <p>Loading</p>
+
+  const handleSort = () => {
+    const sortedData = [...displayPosts].sort((a, b) => {
+      const voteDiffA = a.up_vote_count - a.down_vote_count
+      const voteDiffB = b.up_vote_count - b.down_vote_count
+      return voteDiffB - voteDiffA
+    })
+    setDisplayPosts(sortedData)
   }
 
-  const tags = ['comedy', 'coding', 'technologies', 'programming', 'music', 'arts']
-  const announcements = ['Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eum, porro neque. Repellat debitis nam reprehenderit qui quisquam ab officia commodi .', 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eum, porro neque. Repellat debitis nam reprehenderit qui quisquam ab officia commodi .'] 
+  const handleSearch = (keyword)=>{
+    setKeyword(keyword)
+    refetchPostsByTag()
+  }
+
+
 
   return (
     <div className="mt-10 lg:mt-20">
       <div className="mb-6 md:mb-10 flex justify-between items-center">
-        
+
         <h1 className="text-4xl font-bold">Featured Posts</h1>
-        <Select >
-          <SelectTrigger className="w-[180px] border-2 focus:ring-0">
-            <SelectValue placeholder="Select a fruit" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel className="hidden">Fruits</SelectLabel>
-              <SelectItem value="apple">Apple</SelectItem>
-              <SelectItem value="banana">Banana</SelectItem>
-              <SelectItem value="blueberry">Blueberry</SelectItem>
-              <SelectItem value="grapes">Grapes</SelectItem>
-              <SelectItem value="pineapple">Pineapple</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+        <Button onClick={handleSort} className="bg-c-primary px-4 py-3">Sort by Popularity</Button>
+
       </div>
       <div className="lg:grid grid-cols-12 gap-4 ">
         <div className="col-span-4">
@@ -58,7 +42,7 @@ const PostContainer = () => {
             <h2 className="text-xl font-bold mb-4 order-2">Exclusive Contents</h2>
             <div className="flex lg:block gap-x-6 flex-wrap order-1">
               {
-                tags.map((tag) => <p key={tag} className="flex gap-2 items-center my-1 lg:my-2 cursor-pointer"><IoMdSearch></IoMdSearch>{tag}</p>)
+                tags.map((tag) => <p onClick={()=>handleSearch(tag?.tagName)} key={tag?.tagName} className="flex gap-2 items-center my-1 lg:my-2 cursor-pointer"><IoMdSearch></IoMdSearch>{tag?.tagName}</p>)
               }
             </div>
           </div>
@@ -66,21 +50,34 @@ const PostContainer = () => {
             <h2 className="text-xl font-bold mb-4 order-2">Latest Announcement</h2>
             <div>
               {
-                announcements[announcements.length-1] 
+                announcements.map(announcement => <div key={announcement?._id}>
+                  <div className="my-3 bg-gray-300 dark:bg-gray-600 h-[1px]" />
+                  <h4 className="text-lg font-semibold mb-2">{
+                    announcement?.title
+                  }</h4>
+                  <p className="text-sm">{
+                    announcement?.description
+                  }</p></div>)
               }
             </div>
-
           </div>
         </div>
         <div className="col-span-8">
           {
-            posts.map(post=><Post key={post._id} post={post}></Post>)
+            displayPosts.map(post => <Post key={post._id} post={post} postsByTagLoading={postsByTagLoading}></Post>)
           }
         </div>
-
       </div>
     </div>
   );
 };
+PostContainer.propTypes = {
+  displayPosts: PropTypes.array,
+  postsByTagLoading: PropTypes.bool,
+  setDisplayPosts: PropTypes.func,
+  setKeyword: PropTypes.func,
+  refetchPostsByTag: PropTypes.func,
+}
+
 
 export default PostContainer;
