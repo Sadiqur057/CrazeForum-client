@@ -8,6 +8,7 @@ import { FaUser } from 'react-icons/fa6';
 import { NavLink, Outlet } from 'react-router-dom';
 import { FaHome } from 'react-icons/fa';
 import { AuthContext } from '@/proviers/AuthProvider';
+import { ToastContainer } from 'react-toastify';
 const Dashboard = () => {
   const [openNav, setOpenNav] = useState(true);
   useEffect(() => {
@@ -48,6 +49,7 @@ const Dashboard = () => {
 
   return (
     <>
+    <ToastContainer/>
       <div className='w-72 bg-gray-200 py-2 px-2 dark:bg-gray-900 lg:hidden'>
         <IconButton
           variant="text"
@@ -89,7 +91,7 @@ const Dashboard = () => {
       </div>
       <div className='lg:flex'>
         <Collapse open={openNav} className='mx-auto max-w-72 fixed lg:static'>
-          <aside className="flex flex-col w-72 h-screen px-4 py-8 overflow-y-auto bg-gray-200  dark:bg-gray-900 ">
+          <aside className="flex flex-col w-72 min-h-screen px-4 py-8 overflow-y-auto bg-gray-200  dark:bg-gray-900">
 
           <div className='flex px-2 gap-2 items-center'>
             <img className='w-6 h-6' src="/logo.png" alt="" />
@@ -124,13 +126,13 @@ const Dashboard = () => {
                       <RiShieldUserLine></RiShieldUserLine>
                       <span className="mx-4 font-medium">Manage Users</span>
                     </NavLink>
-                    <NavLink to='/dashboard/reports' className={({ isActive }) => (isActive ? activeStyles : inactiveStyles)}>
+                    <NavLink to='/dashboard/reportedActivities' className={({ isActive }) => (isActive ? activeStyles : inactiveStyles)}>
                       <MdOutlineReportProblem></MdOutlineReportProblem>
                       <span className="mx-4 font-medium">Reported Activities</span>
                     </NavLink>
                   
 
-                    <NavLink to='/dashboard/makeAnnouncement' className={({ isActive }) => (isActive ? activeStyles : inactiveStyles)}>
+                    <NavLink to='/dashboard/addAnnouncement' className={({ isActive }) => (isActive ? activeStyles : inactiveStyles)}>
                       <GrAnnounce></GrAnnounce>
                       <span className="mx-4 font-medium">Make Announcement</span>
                     </NavLink>
@@ -142,9 +144,9 @@ const Dashboard = () => {
                       </p>
                     </NavLink>
                     <div onClick={handleToggle} className='cursor-pointer'>
-                      <p className="flex items-center px-4 py-2 mt-2 text-gray-600 transition-colors duration-300 transform rounded-md dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700" >
+                      <p className="flex items-center px-4 py-2 mt-2 text-gray-600 transition-colors duration-300 transform rounded-md dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700 mb-8" >
                         {theme==="light"? <BsSun></BsSun>:<BsMoonStarsFill></BsMoonStarsFill>}
-                        <span className="mx-4 font-medium">Change Theme</span>
+                        <span className="mx-4 font-medium ">Change Theme</span>
                       </p>
                     </div>
                   </>
