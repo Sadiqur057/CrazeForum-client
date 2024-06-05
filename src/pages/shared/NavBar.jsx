@@ -25,6 +25,7 @@ import {
   Spinner,
 } from "@material-tailwind/react";
 import { AuthContext } from '@/proviers/AuthProvider';
+import useLoadAnnouncements from '@/hooks/useLoadAnnouncements';
 
 
 
@@ -35,6 +36,8 @@ const NavBar = () => {
 
   const prevTheme = localStorage.getItem("theme") || "light";
   const [theme, setTheme] = useState(prevTheme)
+
+  const [announcements, isLoading] = useLoadAnnouncements()
 
 
   useEffect(() => {
@@ -83,17 +86,22 @@ const NavBar = () => {
 
             <FaRegBell className="w-5 h-5" />
 
-            <p className='absolute rounded-full text-xs text-white bg-c-secondary -top-2 left-2 z-10 px-1'>5</p>
+            <p className='absolute rounded-full text-xs text-white bg-c-secondary -top-2 left-2 z-10 px-1'>{announcements.length}</p>
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="max-w-[310px] md:max-w-[431px]">
-          <DropdownMenuLabel>Announcements</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>Please beware of the rules and regulations Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iure deleniti hic nihil aspernatur reiciendis nesciunt sit, quia eos quaerat libero amet facere ducimus animi blanditiis quidem neque nam nisi ea.</DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>Billing</DropdownMenuItem>
-          <DropdownMenuItem>Team</DropdownMenuItem>
-          <DropdownMenuItem>Subscription</DropdownMenuItem>
+          <DropdownMenuLabel><h2 className='text-xl text-center font-bold'>Announcements</h2></DropdownMenuLabel>
+          {
+            announcements.map((announcement,idx) => <div key={idx}><DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <div>
+                  <h4 className='text-lg font-semibold mb-2'>{announcement?.title}</h4>
+                  <p>{announcement.description}</p>
+                </div>
+              </DropdownMenuItem></div>)
+          }
+
+
         </DropdownMenuContent>
       </DropdownMenu>
 
@@ -176,8 +184,8 @@ const NavBar = () => {
                 >
                   Logout
                 </button>
-              ) : loading ? (
-                <Spinner className="h-8 w-8" color="orange" />
+              ) : loading || isLoading ? (
+                <Spinner className="h-8 w-8" color="teal" />
               ) : (
                 <>
                   {" "}
@@ -218,7 +226,7 @@ const NavBar = () => {
               ) : (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="absolute -top-3 -left-2"
+                  className="absolute -top-3 dark:text-white -left-2"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth={2}
@@ -243,7 +251,7 @@ const NavBar = () => {
               >
                 Logout
               </button>
-            ) : loading ? (
+            ) : loading || isLoading ? (
               <Spinner className="h-8 w-8" color="orange" />
             ) : (
               <>
