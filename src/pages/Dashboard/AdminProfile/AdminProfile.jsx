@@ -1,19 +1,18 @@
 import { AuthContext } from "@/proviers/AuthProvider";
 import { useContext } from "react";
-import { BiUpvote } from "react-icons/bi";
-import { BiDownvote } from "react-icons/bi";
-import { FaRegComments, FaUsers } from 'react-icons/fa6';
-import { IoMdTime } from 'react-icons/io';
+import { FaUsers } from 'react-icons/fa6';
 import { MdOutlineEmail } from "react-icons/md";
 import useLoadUserPost from "@/hooks/useLoadUserPost";
 import { FaComments } from "react-icons/fa";
 import { LiaCommentSolid } from "react-icons/lia";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import useAxiosCommon from "@/hooks/useAxiosCommon";
 import { toast } from "react-toastify";
-import React, { PureComponent } from 'react';
-import { PieChart, Pie, Sector, Cell, ResponsiveContainer, Legend } from 'recharts';
+import { PieChart, Pie, Cell, Legend } from 'recharts';
 import useLoadTags from "@/hooks/useLoadTags";
+import useLoadStats from "@/hooks/useLoadStats";
+import LoadingSpinner from "@/components/spinner/LoadingSpinner";
+import { Helmet } from "react-helmet-async";
 
 
 
@@ -22,15 +21,10 @@ const AdminProfile = () => {
   const [posts, isLoading] = useLoadUserPost()
   const axiosCommon = useAxiosCommon()
 
-  const { data: stats = {}, isLoading: isStatsLoading } = useQuery({
-    queryKey: ['stats'],
-    queryFn: async () => {
-      const res = await axiosCommon.get('/stats')
-      console.log(res.data)
-      return res.data;
-    }
-  })
 
+  const [stats,isStatsLoading] = useLoadStats()
+
+  // const [stats,refetchStats] = useLoadStats()
 
   const [tags,refetchTags] = useLoadTags()
 
@@ -70,7 +64,7 @@ const AdminProfile = () => {
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
   const RADIAN = Math.PI / 180;
-  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
@@ -87,10 +81,13 @@ const AdminProfile = () => {
 
   console.log(posts)
   if (isLoading || isStatsLoading) {
-    return <p>Loading</p>
+    return <LoadingSpinner></LoadingSpinner>
   }
   return (
-    <div className="p-5 md:grid grid-cols-12 gap-3 space-y-4 md:space-y-0">
+    <div className="p-3 md:p-5 md:grid grid-cols-12 gap-3 space-y-4 md:space-y-0">
+      <Helmet>
+        <title>CF | Admin Profile</title>
+      </Helmet>
       <div className="col-span-6 shadow-custom w-full p-6 bg-white rounded-lg dark:bg-gray-800 flex gap-5 flex-col items-center lg:items-start lg:flex-row h-fit ">
         <img className="w-14 h-14  rounded-full" src={user?.photoURL} alt="" />
         <div className="w-full flex flex-col items-center lg:items-start">
@@ -133,8 +130,8 @@ const AdminProfile = () => {
       <div className="col-span-5 shadow-custom w-full p-6 bg-white rounded-lg dark:bg-gray-800 flex gap-5 flex-col h-fit">
         <h2 className="font-bold text-lg">Add New Tags</h2>
         <form onSubmit={handleAddTag} className="flex flex-col gap-2">
-          <input type="text" className="w-full py-2 px-3 rounded-md dark:bg-gray-700" name="tag" placeholder="Add New Tags" />
-          <input type="submit" className="py-2 px-6 rounded-md bg-c-primary" value="Add" />
+          <input type="text" className="w-full py-2 px-3 rounded-md bg-gray-100 dark:bg-gray-700" name="tag" placeholder="Enter new tag" />
+          <input type="submit" className="py-2 px-6 text-white rounded-md bg-c-primary" value="Add" />
         </form>
         <h4 className="mt-2 font-semibold text-lg leading-3">Added tags: </h4>
         <div className="flex flex-wrap gap-x-3">{tags.map(tag => <p key={tag?._id}>#{tag?.tagName}</p>)}  </div>
