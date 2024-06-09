@@ -1,19 +1,22 @@
-import useAxiosCommon from "@/hooks/useAxiosCommon";
+import useAxiosSecure from "@/hooks/useAxiosSecure";
 import { AuthContext } from "@/proviers/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
 import { useContext } from "react";
 
-const useLoadUserPost = () => {
-  const axiosCommon = useAxiosCommon()
+const useLoadUserPost = (currentPage) => {
+  const axiosSecure = useAxiosSecure()
   const { user } = useContext(AuthContext)
-  const { data: posts = [], isLoading, refetch: refetchPosts } = useQuery({
-    queryKey: ['post', user?.email],
+  const { data= {result : [], userPostCounts : 0}, isLoading, refetch: refetchPosts } = useQuery({
+    queryKey: ['post', user?.email, currentPage],
     queryFn: async () => {
-      const res = await axiosCommon.get(`/posts/${user?.email}`)
+      const res = await axiosSecure.get(`/posts/${user?.email}?page=${currentPage}`)
+      console.log(res.data)
       return res.data
     }
   })
-  return [posts, isLoading, refetchPosts]
+  const posts = data.result;
+  const userPostCount = data.userPostCounts
+  return [posts, isLoading, refetchPosts, userPostCount]
 };
 
 export default useLoadUserPost;
