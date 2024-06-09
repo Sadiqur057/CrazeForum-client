@@ -26,6 +26,7 @@ import {
 } from "@material-tailwind/react";
 import { AuthContext } from '@/proviers/AuthProvider';
 import useLoadAnnouncements from '@/hooks/useLoadAnnouncements';
+import useAdmin from '@/hooks/useAdmin';
 
 
 
@@ -34,10 +35,12 @@ const NavBar = () => {
   const [openNav, setOpenNav] = React.useState(false);
   const { user, loading, logOut } = useContext(AuthContext)
 
-  const prevTheme = localStorage.getItem("theme") || "light";
+  const prevTheme = localStorage.getItem("theme") || "dark";
   const [theme, setTheme] = useState(prevTheme)
 
   const [announcements, isLoading] = useLoadAnnouncements()
+  const [isAdmin, isAdminLoading] = useAdmin()
+
 
 
   useEffect(() => {
@@ -48,6 +51,9 @@ const NavBar = () => {
       document.documentElement.classList.remove('dark')
     }
   }, [theme])
+
+
+  
 
   const handleToggle = () => {
     console.log('clicked')
@@ -129,9 +135,10 @@ const NavBar = () => {
     </ul>
   );
 
+
   return (
     <div className="max-h-[768px] w-full overflow-hidden border-0 outline-none py-0">
-      <Navbar className='sticky top-0 z-10 h-max max-w-full rounded-none dark:bg-gray-900  text-c-black'>
+      <Navbar className='sticky top-0 z-10 h-max max-w-full rounded-none dark:bg-gray-900  text-c-black px-0'>
         <div className="flex justify-between h-[40px] md:h-[50px] max-w-screen-xl w-[90%] md:w-5/6 mx-auto">
           <Typography className="mr-4 cursor-pointer font-bold text-2xl md:text-3xl flex items-center gap-2">
             <img className="w-6 h-6" src="/logo.png" alt="" />
@@ -164,14 +171,14 @@ const NavBar = () => {
                         Sadiqur Rahman
                       </DropdownMenuLabel>
                       <DropdownMenuSeparator />
-                      <Link to='/dashboard'>
+                      <Link to={!isAdminLoading &&  isAdmin? "/dashboard/adminProfile" :"/dashboard/userProfile?"}>
                         <DropdownMenuItem>
                           <MdOutlineDashboard>
                           </MdOutlineDashboard> &nbsp; Dashboard
                         </DropdownMenuItem>
                       </Link>
                       <DropdownMenuItem>
-                        <MdLogout></MdLogout> &nbsp; Logout
+                        <MdLogout></MdLogout> <button onClick={handleLogout}>&nbsp; Logout</button>
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -190,13 +197,8 @@ const NavBar = () => {
                 <>
                   {" "}
                   <Link to="/login" className="hidden lg:block">
-                    <button className="btn bg-c-primary  rounded-xl hover:bg-c-hover text-white md:text-[15px] font-bold mr-2">
-                      Login
-                    </button>
-                  </Link>
-                  <Link to="/register" className="hidden lg:block">
-                    <button className="btn bg-c-primary  rounded-xl hover:bg-c-hover text-white md:text-[15px] font-bold ">
-                      Register
+                    <button className="btn bg-c-primary  rounded-md py-2 px-3 hover:bg-c-hover text-white md:text-[15px] font-bold mr-2">
+                      Join Us
                     </button>
                   </Link>
                 </>
@@ -246,7 +248,7 @@ const NavBar = () => {
           <div className="flex items-center gap-x-1 ">
             {user ? (
               <button
-                className="btn bg-c-primary text-white md:text-[15px] font-bold"
+                className="btn bg-c-primary text-white md:text-[15px] py-2 px-2 rounded-md font-bold"
                 onClick={handleLogout}
               >
                 Logout
@@ -257,13 +259,8 @@ const NavBar = () => {
               <>
                 {" "}
                 <Link to="/login" className="">
-                  <button className="btn bg-c-primary  rounded-xl hover:bg-c-hover text-white md:text-[15px] font-bold mr-2">
-                    Login
-                  </button>
-                </Link>
-                <Link to="/register">
-                  <button className="btn bg-c-primary  rounded-xl hover:bg-c-hover text-white md:text-[15px] font-bold ">
-                    Register
+                  <button className="btn bg-c-primary  rounded-md hover:bg-c-hover text-white md:text-[15px] font-bold mr-2 px-3 py-2">
+                    Join Us
                   </button>
                 </Link>
               </>
