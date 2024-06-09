@@ -254,7 +254,7 @@ const NavBar = () => {
                 Logout
               </button>
             ) : loading || isLoading ? (
-              <Spinner className="h-8 w-8" color="orange" />
+              <Spinner className="h-8 w-8" color="teal" />
             ) : (
               <>
                 {" "}
