@@ -9,7 +9,7 @@ import { VscEye, VscEyeClosed } from "react-icons/vsc";
 import { FaGithub } from "react-icons/fa6";
 import { Input } from "@material-tailwind/react";
 import GoogleLogin from "@/components/socialLogin/GoogleLogin";
-// import authImg from "../../assets/images/auth.png"
+import loginImg from "../../assets/images/loginImg.png"
 
 const Login = () => {
 
@@ -43,13 +43,13 @@ const Login = () => {
         navigate(from, { replace: true })
       })
       .catch((error) => {
-        // const errorMsg = error.message.split("(")[1].split(")")[0];
+        const errorMsg = error.message.split("(")[1].split(")")[0];
         console.log(error)
-        // if (errorMsg === "auth/invalid-credential") {
-        //   toast.error("Your email or password is incorrect");
-        // } else {
-        //   toast.error(errorMsg);
-        // }
+        if (errorMsg === "auth/invalid-credential") {
+          toast.error("Your email or password is incorrect");
+        } else {
+          toast.error(errorMsg);
+        }
       });
   };
 
@@ -70,17 +70,17 @@ const Login = () => {
 
 
   return (
-    <section className="lg:pt-6 flex py-[60px] items-center bg-cool lg:px-10">
+    <section className="lg:pt-6 px-0 flex py-[60px] items-center bg-cool lg:px-10">
       <Helmet>
-        <title>CF | Login</title>
+        <title>CF | Join Us</title>
       </Helmet>
-      <div className="flex justify-center w-[90%]  md:w-fit  mx-auto bg-base-100 items-center mt-6  rounded-xl">
-        <div className="grid lg:grid-cols-2  justify-center w-[90%]   md:w-fit mx-auto bg-base-100 items-center mt-6  rounded-xl ">
+      <div className="flex justify-center  md:w-fit  mx-auto bg-base-100 items-center mt-6 rounded-xl w  w-full">
+        <div className="w-full grid lg:grid-cols-2  justify-center   md:w-fit mx-auto bg-base-100 items-center mt-6  rounded-xl ">
           <div className="hidden lg:block w-full">
-            {/* <img src={authImg} className="w-full max-h-[410px]" alt="" />r */}
+            <img src={loginImg} className="object-cover object-center w-full max-h-[410px]" alt="" />
           </div>
-          <div className="m-0 p-0 md:px-2 lg:px-10 space-y-3 rounded-sm mx-auto lg:w-full md:w-[400px] md:max-w-[400px] w-[93%] ">
-            <div className="m-0 md:px-8 lg:px-0 space-y-3 rounded-sm mx-auto lg:w-full lg:max-w-[400px] py-7 md:py-10">
+          <div className="m-0 p-0 md:px-2 lg:px-10 space-y-3 rounded-sm mx-auto lg:w-full md:w-[400px] md:max-w-[400px]  ">
+            <div className=" m-0 md:px-8 lg:px-0 space-y-3 rounded-sm mx-auto w-[290px] md:w-[340px] lg:w-full lg:max-w-[400px] py-7 md:py-10">
               <h1 className="text-3xl font-bold text-center pb-4">Login Here</h1>
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div className="flex flex-col">
@@ -90,7 +90,7 @@ const Login = () => {
                       type="email"
                       autoComplete="current-email"
                       {...register("email", { required: "Email is required" })}
-                      color="orange"
+                      color="teal"
                       label="Email"
                     />
                   </div>
@@ -106,7 +106,7 @@ const Login = () => {
                         required: "Password is required",
                       })}
                       label="Password"
-                      color="orange"
+                      color="teal"
                     />
                     <p
                       onClick={handleViewPassword}
@@ -119,7 +119,7 @@ const Login = () => {
 
                 <input
                   type="submit"
-                  className="btn bg-c-primary  w-full text-white hover:bg-c-hover"
+                  className="btn bg-c-primary py-2 px-3 rounded-md cursor-pointer w-full text-white hover:bg-c-hover"
                   value="Login"
                 />
               </form>
