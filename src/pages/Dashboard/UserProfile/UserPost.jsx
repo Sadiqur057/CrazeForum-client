@@ -1,15 +1,19 @@
 
+import LoadingSpinner from "@/components/spinner/LoadingSpinner";
 import useAxiosCommon from "@/hooks/useAxiosCommon";
 import useLoadUserPost from "@/hooks/useLoadUserPost";
 import { Button } from "@material-tailwind/react";
 import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const UserPost = () => {
 
 
-  const [posts, isLoading, refetchPosts] = useLoadUserPost()
+  const [currentPage, setCurrentPage] = useState(0)
+  const [posts, isLoading, refetchPosts,userPostCounts] = useLoadUserPost(currentPage)
   const axiosCommon = useAxiosCommon()
 
   const { mutate } = useMutation({
@@ -28,11 +32,31 @@ const UserPost = () => {
     mutate(id)
   }
 
-  if (isLoading) {
-    return "loading"
+  // pagination related
+  const itemsPerPage = 10;
+  const numOfPages = Math.ceil(userPostCounts / itemsPerPage)
+  const pages = [...Array(numOfPages).keys()];
+
+  const handlePrevPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1)
+    }
   }
+  const handleNextPage = () => {
+    if (currentPage < pages.length - 1) {
+      setCurrentPage(currentPage + 1)
+    }
+  }
+
+  if(isLoading){
+    return <LoadingSpinner></LoadingSpinner>
+  }
+
   return (
-    <div className='p-5 overflow-auto'>
+    <div className='p-3 md:p-5 overflow-auto'>
+      <Helmet>
+        <title>CF | My posts</title>
+      </Helmet>
       <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
         <thead className="bg-gray-50 dark:bg-gray-800">
           <tr>
@@ -73,7 +97,32 @@ const UserPost = () => {
             </tr>)
           }
         </tbody>
+
       </table>
+      {
+        numOfPages ? <div className="pagination flex justify-center gap-4 my-5">
+          <button
+            className="p-2 px-4 rounded bg-gray-200 dark:bg-gray-700"
+            onClick={handlePrevPage}
+          >
+            Prev
+          </button>
+          {
+            pages.map(page => <button
+              className={currentPage === page ? "p-2 px-4 rounded bg-c-primary text-white" : "p-2 px-4 rounded bg-gray-200 dark:bg-gray-700"}
+              onClick={() => setCurrentPage(page)}
+              key={page}>
+              {page + 1}
+            </button>)
+          }
+          <button
+            className="p-2 px-4 rounded bg-gray-200 dark:bg-gray-700"
+            onClick={handleNextPage}
+          >
+            Next
+          </button>
+        </div> : <div className="text-center py-20"> No data found</div>
+      }
     </div>
   );
 };
