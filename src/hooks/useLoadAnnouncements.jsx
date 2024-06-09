@@ -3,14 +3,14 @@ import useAxiosCommon from './useAxiosCommon';
 
 const useLoadAnnouncements = () => {
   const axiosCommon = useAxiosCommon()
-  const {data:announcements=[], isLoading} = useQuery({
+  const {data:announcements=[], isLoading:isAnnouncementLoading} = useQuery({
     queryKey: ['announcement'],
     queryFn: async()=>{
       const res = await axiosCommon.get('/announcements');
       return res.data
     }
   })
-  return [announcements, isLoading]
+  return [announcements, isAnnouncementLoading]
 };
 
 export default useLoadAnnouncements;
