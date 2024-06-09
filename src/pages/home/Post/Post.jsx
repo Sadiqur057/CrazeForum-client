@@ -3,16 +3,22 @@ import { MdOutlineThumbsUpDown } from "react-icons/md";
 import { IoMdTime } from "react-icons/io";
 import PropTypes from 'prop-types'
 import { Link } from "react-router-dom";
+import useLoadComments from "@/hooks/useLoadComments";
 
 
 
 const Post = ({ post, postsByTagLoading }) => {
 
-  const { _id, author_image, author_name, post_title, description, tag, up_vote_count, down_vote_count, comment_count, posted_time } = post || {}
+  const { _id, author_image, author_name, post_title, description, tag, up_vote_count, down_vote_count, posted_time } = post || {}
   const total_votes = up_vote_count - down_vote_count;
 
+
+  console.log(_id)
+
+  const [comments] = useLoadComments(_id)
+
   if(postsByTagLoading){
-    return 'Loading'
+    return <div className="py-20 w-full flex justify-center items-center ">loading</div>
   }
 
   return (
@@ -38,7 +44,7 @@ const Post = ({ post, postsByTagLoading }) => {
           <div className="flex justify-between mt-3 md:mt-5 items-end text-gray-800 dark:text-gray-400 gap-2 md:gap-6">
 
             <div className='flex gap-4 md:gap-10'>
-              <p className='flex gap-2 items-center'><FaRegComments className='text-lg'></FaRegComments><span>{comment_count || 0}</span></p>
+              <p className='flex gap-2 items-center'><FaRegComments className='text-lg'></FaRegComments><span>{comments.length || 0}</span></p>
 
               <p className='flex gap-2 items-center'><MdOutlineThumbsUpDown className='text-lg'></MdOutlineThumbsUpDown><span>{total_votes || 0}</span></p>
             </div>

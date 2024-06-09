@@ -1,83 +1,88 @@
+import { Skeleton } from "@/components/ui/skeleton";
 import Post from "./Post";
-import { IoMdSearch } from "react-icons/io";
-import useLoadAnnouncements from "@/hooks/useLoadAnnouncements";
 import PropTypes from 'prop-types'
-import { Button } from "@material-tailwind/react";
-import useLoadTags from "@/hooks/useLoadTags";
 
-const PostContainer = ({ postsByTagLoading, displayPosts, setDisplayPosts,refetchPostsByTag, setKeyword }) => {
+const PostContainer = ({ setCurrentPage, currentPage, count, displayPosts, postsByTagLoading }) => {
+  
+  // pagination related
+  const itemsPerPage = 5;
+  const numOfPages = Math.ceil(count / itemsPerPage)
+  const pages = [...Array(numOfPages).keys()];
+  console.log(count)
 
-  const [announcements] = useLoadAnnouncements()
-
-  const [tags ] = useLoadTags()
-
-
-  const handleSort = () => {
-    const sortedData = [...displayPosts].sort((a, b) => {
-      const voteDiffA = a.up_vote_count - a.down_vote_count
-      const voteDiffB = b.up_vote_count - b.down_vote_count
-      return voteDiffB - voteDiffA
-    })
-    setDisplayPosts(sortedData)
+  const handlePrevPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1)
+    }
+  }
+  const handleNextPage = () => {
+    if (currentPage < pages.length - 1) {
+      setCurrentPage(currentPage + 1)
+    }
   }
 
-  const handleSearch = (keyword)=>{
-    setKeyword(keyword)
-    refetchPostsByTag()
-  }
-
-
-
-  return (
-    <div className="mt-10 lg:mt-20">
-      <div className="mb-6 md:mb-10 flex justify-between items-center">
-
-        <h1 className="text-4xl font-bold">Featured Posts</h1>
-        <Button onClick={handleSort} className="bg-c-primary px-4 py-3">Sort by Popularity</Button>
-
-      </div>
-      <div className="lg:grid grid-cols-12 gap-4 ">
-        <div className="col-span-4">
-          <div className=" bg-[#f3f3f5] dark:bg-gray-800 h-fit p-4 md:p-6 lg:p-10 rounded-xl mb-4">
-            <h2 className="text-xl font-bold mb-4 order-2">Exclusive Contents</h2>
-            <div className="flex lg:block gap-x-6 flex-wrap order-1">
-              {
-                tags.map((tag) => <p onClick={()=>handleSearch(tag?.tagName)} key={tag?.tagName} className="flex gap-2 items-center my-1 lg:my-2 cursor-pointer"><IoMdSearch></IoMdSearch>{tag?.tagName}</p>)
-              }
-            </div>
-          </div>
-          <div className=" bg-[#f3f3f5] dark:bg-gray-800 h-fit p-4 md:p-6 lg:p-10 rounded-xl mb-4">
-            <h2 className="text-xl font-bold mb-4 order-2">Latest Announcement</h2>
-            <div>
-              {
-                announcements.map(announcement => <div key={announcement?._id}>
-                  <div className="my-3 bg-gray-300 dark:bg-gray-600 h-[1px]" />
-                  <h4 className="text-lg font-semibold mb-2">{
-                    announcement?.title
-                  }</h4>
-                  <p className="text-sm">{
-                    announcement?.description
-                  }</p></div>)
-              }
-            </div>
-          </div>
+  if (postsByTagLoading) {
+    return <div className="flex gap-2 space-x-4 col-span-8 py-10 w-full px-5 h-fit bg-gray-100 dark:bg-gray-800 rounded-lg">
+      <Skeleton className="h-14 w-16 rounded-xl" />
+      <div className="space-y-1 grid grid-cols-12 w-full gap-1 items-center">
+        <div className="col-span-6 space-y-2">
+          <Skeleton className="h-3 w-full" />
+          <Skeleton className="h-3 w-1/2" />
         </div>
-        <div className="col-span-8">
-          {
-            displayPosts.map(post => <Post key={post._id} post={post} postsByTagLoading={postsByTagLoading}></Post>)
-          }
+        <div className="col-span-6 self-end justify-end h-full flex">
+          <Skeleton className="h-3 w-1/2" />
+        </div>
+        <div className="col-span-12">
+          <Skeleton className="h-12 w-full" />
+        </div>
+        <div className="col-span-12 grid grid-cols-12 gap-4 ">
+          <Skeleton className="h-3 w-full col-span-2" />
+          <Skeleton className="h-3 col-span-6 w-1/3" />
+          <Skeleton className="h-3 col-span-4 " />
         </div>
       </div>
     </div>
+  }
+  return (
+    <div className="col-span-8 overflow-auto">
+
+      {
+        displayPosts.map(post => <Post key={post._id} post={post} postsByTagLoading={postsByTagLoading}></Post>)
+      }
+      {
+        numOfPages ? <div className="pagination flex justify-center gap-2 md:gap-4 mb-5 text-sm md:text-base">
+          <button
+            className="p-2 md:px-4 rounded bg-gray-200 dark:bg-gray-700"
+            onClick={handlePrevPage}
+          >
+            Prev
+          </button>
+          {
+            pages.map(page => <button
+              className={currentPage === page ? "p-2 md:px-4 rounded bg-c-primary text-white" : "p-2 md:px-4 rounded bg-gray-200 dark:bg-gray-700"}
+              onClick={() => setCurrentPage(page)}
+              key={page}>
+              {page + 1}
+            </button>)
+          }
+          <button
+            className="p-2 ms:px-4 rounded bg-gray-200 dark:bg-gray-700"
+            onClick={handleNextPage}
+          >
+            Next
+          </button>
+        </div> : <div className="text-center py-20"> No data found</div>
+      }
+    </div>
   );
 };
+
 PostContainer.propTypes = {
   displayPosts: PropTypes.array,
   postsByTagLoading: PropTypes.bool,
-  setDisplayPosts: PropTypes.func,
-  setKeyword: PropTypes.func,
-  refetchPostsByTag: PropTypes.func,
-}
-
+  setCurrentPage: PropTypes.func,
+  count: PropTypes.number,
+  currentPage: PropTypes.string,
+};
 
 export default PostContainer;
