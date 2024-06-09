@@ -7,7 +7,7 @@ import PostDetails from "@/pages/home/Post/PostDetails";
 import Login from "@/pages/login/Login";
 import Register from "@/pages/register/Register";
 import Membership from "@/pages/Membership/Membership";
-import Dashboard from "@/pages/Dashboard/Dashboard";
+import Dashboard from "@/layout/Dashboard";
 import UserProfile from "@/pages/Dashboard/UserProfile/UserProfile";
 import UserPost from "@/pages/Dashboard/UserProfile/UserPost";
 import AddPost from "@/pages/Dashboard/UserProfile/AddPost";
@@ -16,11 +16,16 @@ import Users from "@/pages/Dashboard/AdminProfile/Users";
 import AddAnnouncement from "@/pages/Dashboard/AdminProfile/AddAnnouncement";
 import Comments from "@/pages/Dashboard/UserProfile/Comments";
 import ReportedActivities from "@/pages/Dashboard/AdminProfile/ReportedActivities";
+import AdminRoutes from "./AdminRoutes";
+import PrivateRoutes from "./PrivateRoutes";
+import EditProfile from "@/pages/Dashboard/UserProfile/EditProfile";
+import ErrorPage from "@/pages/ErrorPage/ErrorPage";
 
 export const Routes = createBrowserRouter([
   {
     path: '/',
     element: <Root></Root>,
+    errorElement: <ErrorPage></ErrorPage>,
     children: [
       {
         path: '/',
@@ -40,45 +45,50 @@ export const Routes = createBrowserRouter([
       },
       {
         path: '/membership',
-        element: <Membership></Membership>
+        element: <PrivateRoutes><Membership></Membership></PrivateRoutes>
       },
     ]
   },
   {
     path: 'dashboard',
-    element: <Dashboard></Dashboard>,
-    children:[
+    element: <PrivateRoutes><Dashboard></Dashboard></PrivateRoutes>,
+    errorElement: <ErrorPage></ErrorPage>,
+    children: [
       {
-        path:'userProfile',
-        element:<UserProfile></UserProfile>
+        path: 'userProfile',
+        element: <PrivateRoutes><UserProfile></UserProfile></PrivateRoutes>
       },
       {
-        path:'userPost',
-        element:<UserPost></UserPost>
+        path: 'userPost',
+        element: <PrivateRoutes><UserPost></UserPost></PrivateRoutes>
       },
       {
-        path:'addPost',
-        element:<AddPost></AddPost>
+        path: 'addPost',
+        element: <PrivateRoutes><AddPost></AddPost></PrivateRoutes>
       },
       {
-        path:'adminProfile',
-        element:<AdminProfile></AdminProfile>
+        path: 'editProfile',
+        element: <PrivateRoutes><EditProfile></EditProfile></PrivateRoutes>
       },
       {
-        path:'users',
-        element:<Users></Users>
+        path: 'comments/:postId',
+        element: <PrivateRoutes><Comments></Comments></PrivateRoutes>
       },
       {
-        path:'addAnnouncement',
-        element:<AddAnnouncement></AddAnnouncement>
+        path: 'adminProfile',
+        element: <AdminRoutes><AdminProfile></AdminProfile></AdminRoutes>
       },
       {
-        path:'comments/:postId',
-        element:<Comments></Comments>
+        path: 'users',
+        element: <AdminRoutes><Users></Users></AdminRoutes>
       },
       {
-        path:'reportedActivities',
-        element:<ReportedActivities></ReportedActivities>
+        path: 'addAnnouncement',
+        element: <AdminRoutes><AddAnnouncement></AddAnnouncement></AdminRoutes>
+      },
+      {
+        path: 'reportedActivities',
+        element: <AdminRoutes><ReportedActivities></ReportedActivities></AdminRoutes>
       },
     ]
   }
