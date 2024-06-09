@@ -3,17 +3,17 @@ import { Helmet } from "react-helmet-async";
 import useAuth from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import useAxiosCommon from '@/hooks/useAxiosCommon';
+import useAxiosSecure from '@/hooks/useAxiosSecure';
 
 const AddAnnouncement = () => {
 
   const { user } = useAuth();
-  const axiosCommon = useAxiosCommon()
+  const axiosSecure = useAxiosSecure()
   const navigate = useNavigate();
 
   const { mutate } = useMutation({
     mutationFn: (announcementDetails) => {
-      axiosCommon.post("/announcement", announcementDetails)
+      axiosSecure.post("/announcement", announcementDetails)
         .then(res => {
           if (res.data.insertedId) {
             Swal.fire({
@@ -43,16 +43,16 @@ const AddAnnouncement = () => {
   }
 
   return (
-    <div className="bg-cool p-5">
+    <div className="bg-cool p-3 md:p-5">
       <Helmet>
-        <title>CF | Add Post</title>
+        <title>CF | Add Announcements</title>
       </Helmet>
-      <section className="py-5 bg-gray-900  rounded-md bg-cool">
+      <section className="py-5 bg-gray-200 dark:bg-gray-900  rounded-md bg-cool">
         <form
           onSubmit={handleAddAnnouncement}
-          className="container flex flex-col mx-auto space-y-12 bg-base-100 rounded-xl px-4ee md:px-10 pb-5"
+          className="container flex flex-col mx-auto space-y-12 rounded-xl px-5 md:px-10 pb-5"
         >
-          <fieldset className=" gap-6 rounded-md p-2 md:p-6 lg:p-10">
+          <fieldset className=" gap-6 rounded-md  md:p-6 lg:p-10">
             <div className="space-y-2 col-span-full lg:col-span-1">
               <p className="text-center font-bold text-2xl md:text-3xl py-8">
                 Add Announcements
