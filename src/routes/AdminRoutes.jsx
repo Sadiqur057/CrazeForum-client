@@ -2,6 +2,7 @@ import { Navigate, useLocation } from "react-router-dom";
 import useAdmin from "../hooks/useAdmin";
 import useAuth from "../hooks/useAuth";
 import PropTypes from 'prop-types'
+import LoadingSpinner from "@/components/spinner/LoadingSpinner";
 
 const AdminRoutes = ({children}) => {
   const {user, loading, logOut} = useAuth()
@@ -9,7 +10,7 @@ const AdminRoutes = ({children}) => {
   const location = useLocation();
 
   if (loading || isAdminLoading) {
-    return <p className="h-screen flex justify-center items-center ">Loading...</p>
+    return <LoadingSpinner></LoadingSpinner>
   }
   
   if (user && isAdmin) {
