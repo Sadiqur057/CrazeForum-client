@@ -11,14 +11,11 @@ import TagBox from './TagBox';
 import PropTypes from 'prop-types'
 
 
-const Banner = ({ setKeyword, refetchPostsByTag }) => {
+const Banner = ({ setKeyword, refetchPostsByTag, setCurrentPage }) => {
   const handleSearch = (e) => {
     e.preventDefault()
     const keyword = e.target.keyword.value;
-    if (!keyword) {
-      refetchPostsByTag()
-      return setKeyword('all')
-    }
+    setCurrentPage(0)
     setKeyword(keyword)
     refetchPostsByTag()
   }
@@ -30,7 +27,7 @@ const Banner = ({ setKeyword, refetchPostsByTag }) => {
         <form
           onSubmit={handleSearch}
           className='flex mx-auto lg:m-0 justify-center lg:justify-start bg-white dark:bg-gray-900 w-full rounded-3xl p-[3px] max-w-sm'>
-          <input type="text" placeholder="Search by Tags" className='rounded-l-3xl w-full pl-4 py-2 dark:bg-gray-900 outline-none text-neutral-800 dark:text-white' name='keyword' />
+          <input type="text" placeholder="Search by Tags" className='rounded-l-3xl w-full pl-4 py-2 dark:bg-gray-900 outline-none text-gray-800 dark:text-white' name='keyword' />
           <input type="submit" className='px-4 font-medium bg-c-primary rounded-3xl py-2' />
         </form>
       </div>
@@ -73,7 +70,8 @@ const Banner = ({ setKeyword, refetchPostsByTag }) => {
 
 Banner.propTypes = {
   setKeyword: PropTypes.func,
-  refetchPostsByTag: PropTypes.func
+  refetchPostsByTag: PropTypes.func,
+  setCurrentPage: PropTypes.func,
 }
 
 export default Banner;
