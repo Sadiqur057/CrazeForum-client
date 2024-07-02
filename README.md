@@ -34,4 +34,4 @@ git clone https://github.com/Sadiqur057/CrazeForum-client.git
 npm install
 
 # run
-npm start
+npm run dev
